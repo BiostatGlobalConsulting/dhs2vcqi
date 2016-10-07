@@ -31,7 +31,8 @@ foreach d in MONTH DAY YEAR {
 	local vlist`d'_ri
 	local vlist`d'_tt
 	
-	if ${RI_SURVEY}==1  { //Currently this will also include the SIA participants as they can be found in RI survey...
+	if ${RI_SURVEY}==1  { 
+		* Currently this will also include the SIA participants as they can be found in RI survey...
 		local vlist`d'_ri ${CHILD_DOB_HIST_`d'}
 	}
 	
@@ -52,7 +53,8 @@ foreach d in MONTH DAY YEAR {
 	}
 	
 	* If it ends with a , this will need to be removed
-	if "`=substr("`vlist`d''",-1,1)'"=="," { // replace , with missing if last character in string is ,
+	if "`=substr("`vlist`d''",-1,1)'"=="," { 
+		*  replace , with missing if last character in string is ,
 		local vlist`d' `=substr("`vlist`d''",1,length("`vlist`d''")-1)'
 		
 	}
@@ -60,8 +62,9 @@ foreach d in MONTH DAY YEAR {
 	di "`vlist`d''"
 	
 	
-	foreach v in `=subinstr("`vlist`d''",","," ",.)' { //replace , with space " " for purposes of doing replacement
-			replace `v'=. if inlist(`v',99,98,97,9999,9998,9997) 
+	foreach v in `=subinstr("`vlist`d''",","," ",.)' { 
+		* replace , with space " " for purposes of doing replacement
+		replace `v'=. if inlist(`v',99,98,97,9999,9998,9997) 
 	}
 
 	di "`vlist`d''"
@@ -70,12 +73,13 @@ foreach d in MONTH DAY YEAR {
 	gen dob_`d'=.
 	label variable dob_`d' "`d' used to determine eligibility"
 
-	if wordcount(subinstr("`vlist`d''",","," ",.)) >= 2 { //If there are more than 2 values provided, use the minimum value
-	replace dob_`d'=min(`vlist`d'')
-		
+	if wordcount(subinstr("`vlist`d''",","," ",.)) >= 2 { 
+		* If there are more than 2 values provided, use the minimum value
+		replace dob_`d'=min(`vlist`d'')
 	}
-	else if wordcount(subinstr("`vlist`d''",","," ",.)) == 1 { //else if there is only 1 value, use that as the date component
-			replace dob_`d'=`=subinstr("`vlist`d''",",","",.)'
+	else if wordcount(subinstr("`vlist`d''",","," ",.)) == 1 { 
+		* else if there is only 1 value, use that as the date component
+		replace dob_`d'=`=subinstr("`vlist`d''",",","",.)'
 	}
 }
 
@@ -490,9 +494,10 @@ if $RI_SURVEY==1 {
 	clonevar RI11=HH14
 
 	* Create RI12 Individual Number
-	gen RI12=string(${RI_LINE}) + "_"  + string(${TT_LINE})
-	label variable RI12  "Unique number for child using the Respondent's line number and child line number"
-	
+	*gen RI12=string(${RI_LINE}) + "_"  + string(${TT_LINE})
+	*label variable RI12  "Unique number for child using the Respondent's line number and child line number"
+	gen RI12 = ${HM_LINE}
+	label variable RI12 "Respondent line number from HM dataset"
 	* Create RI26 Vaccination Card ever received?
 		gen RI26=.
 		

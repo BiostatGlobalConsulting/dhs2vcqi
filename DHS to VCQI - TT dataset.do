@@ -24,12 +24,17 @@ if $TT_SURVEY==1 {
 
 	save DHS_${DHS_NUM}_to_VCQI_TT, replace 
 
-
 	* Only keep the people who participated in the survey 
 	keep if DHS_${DHS_NUM}_tt_survey==1
+	
+	* Only keep if the child has not reached the first birthday
+	keep if ${CHILD_AGE_YEARS} == 0
+	
+	* Only keep if the child was born alive
+	keep if ${CHILD_IS_ALIVE} == 1 | ${CHILD_BORN_ALIVE} == 1
 
 	* Only keep if the interview was completed
-	keep if HM38==4
+	keep if !missing(TT37) | !missing(TT41)
 	
 	* Drop all variables except TT
 	keep TT* `dlist' tt_eligible
@@ -37,9 +42,4 @@ if $TT_SURVEY==1 {
 
 	save, replace
 
-	* Save dataset for each SIA survey
-	foreach v in `=lower("${SIA_LIST}")' {
-		use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_to_VCQI_TT", clear
-		save DHS_${DHS_NUM}_VCQI_TT_SIA_`=upper("`v'")', replace
-	}
 }

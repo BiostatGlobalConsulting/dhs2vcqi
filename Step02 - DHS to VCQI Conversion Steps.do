@@ -218,25 +218,25 @@ if $TT_SURVEY==1 {
 	}
 	
 	
-		* For the globals that will be populated with variable values confirm the variables exist
-		foreach v in TT_LINE MOTHER_DOB_MONTH MOTHER_DOB_YEAR NUM_TT_PREGNANCY ///
-					NUM_TT_ANYTIME YEARS_SINCE_LAST_TT TT_DISPOSITION {
-			if "$`v'"=="" {
-				di as error "Global macro `v' must be defined to complete the TT analysis"
-			}
-			else if "$`v'"!="" {
-				if "$`v'"!="1" {
-				capture confirm variable ${`v'}
-					if !_rc {
-						global `v' 	DHS_${DHS_NUM}_${`v'}	
-					}
-					else {
-						di as error ///
-						"Variable ${`v'} provided in global macro `v' does not exist" //Let the user know if a variable does not exist in dataset
-					}
+	* For the globals that will be populated with variable values confirm the variables exist
+	foreach v in TT_LINE MOTHER_DOB_MONTH MOTHER_DOB_YEAR NUM_TT_PREGNANCY ///
+				NUM_TT_ANYTIME YEARS_SINCE_LAST_TT TT_DISPOSITION {
+		if "$`v'"=="" {
+			di as error "Global macro `v' must be defined to complete the TT analysis"
+		}
+		else if "$`v'"!="" {
+			if "$`v'"!="1" {
+			capture confirm variable ${`v'}
+				if !_rc {
+					global `v' 	DHS_${DHS_NUM}_${`v'}	
+				}
+				else {
+					di as error ///
+					"Variable ${`v'} provided in global macro `v' does not exist" //Let the user know if a variable does not exist in dataset
 				}
 			}
 		}
+	}
 
 }
 

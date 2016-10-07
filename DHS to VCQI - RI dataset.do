@@ -43,15 +43,16 @@ if $RI_SURVEY==1 {
 		local dlist `dlist' bcg_scar_history
 	}
 	
+	* Make a list of the additional variables to include with the dataset
+	foreach v in $RI_ADDITIONAL_VARS {
+		capture confirm variable DHS_${DHS_NUM}_`v'
+		if _rc == 0 local dlist `dlist' DHS_${DHS_NUM}_`v'
+	}
 
-	keep RI* `dlist' ri_eligible age_months
-	aorder
+	keep  RI* `dlist' ri_eligible age_months 
+	order RI* `dlist' ri_eligible age_months 
+
 
 	save, replace
 
-	* Save dataset for each SIA survey
-	foreach v in `=lower("${SIA_LIST}")' {
-		use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_to_VCQI_RI", clear
-		save DHS_${DHS_NUM}_VCQI_RI_SIA_`=upper("`v'")', replace
-	}
 }
