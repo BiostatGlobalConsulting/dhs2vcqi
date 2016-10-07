@@ -33,7 +33,7 @@ drop if HM19!=4
 
 save, replace
 
-* Save dataset for each SIA survey and rename each HM25 variable
+* Save dataset for each SIA survey and rename each HM41 variable
 foreach v in `=lower("${SIA_LIST}")' {
 	use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_to_VCQI_HM", clear
 	rename HM41_`v' HM41

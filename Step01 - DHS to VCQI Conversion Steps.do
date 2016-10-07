@@ -36,19 +36,23 @@ if $RI_SURVEY ==1 & $TT_SURVEY==1 {
 	* Create variable to show they were part of the Child Survey
 	gen child_survey=1
 	label variable child_survey "Participated in Child Survey"
+	
+	capture confirm variable $NUM_TT_PREGNANCY
+	if _rc == 0 gen tt_survey = !missing($NUM_TT_PREGNANCY)
+	if _rc != 0 gen tt_survey = .
 
 	save "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", replace
 
 	append using "${DHS_IR_DATA}"
 
 	* Create variable to indicate Womens Survey
-	gen tt_survey=1 if child_survey==.
+	replace tt_survey=1 if child_survey==. & !missing($NUM_TT_PREGNANCY)
 	label variable tt_survey "Participated in Womens/TT survey"
 
 	* Create line number variable for merging purposes
 	gen ${HM_LINE}=${RI_LINE} 
-		replace ${HM_LINE}=${TT_LINE} if missing(${RI_LINE}) & child_survey!=1
-		label variable ${HM_LINE} "line number"
+	replace ${HM_LINE}=${TT_LINE} if missing(${RI_LINE}) & child_survey!=1
+	label variable ${HM_LINE} "line number"
 		
 	* Rename the STRATUM_ID variable so a merge can occur with Household members and Household list datasets
 	if "$STRATUM_ID"=="shstate" {

@@ -30,17 +30,16 @@ save level1name, replace
 
 * Create level2names dataset
 use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
-		bysort $PROVINCE_ID: keep if _n == 1
-	keep $PROVINCE_ID
-	sort $PROVINCE_ID
-	rename $PROVINCE_ID level2id
-	gen level2name = ""
-	forvalues i = 1/`=_N' {
-		replace level2name = "`:label `=subinstr("$PROVINCE_ID","DHS_${DHS_NUM}_","",.)' `=level2id[`i']''" in `i'
-	}
-	label value level2id
-	save level2names, replace
-
+bysort $PROVINCE_ID: keep if _n == 1
+keep $PROVINCE_ID
+sort $PROVINCE_ID
+rename $PROVINCE_ID level2id
+gen level2name = ""
+forvalues i = 1/`=_N' {
+	replace level2name = "`:label `=subinstr("$PROVINCE_ID","DHS_${DHS_NUM}_","",.)' `=level2id[`i']''" in `i'
+}
+label value level2id
+save level2names, replace
 
 * Create level2order dataset
 clear
@@ -71,10 +70,7 @@ else {
 	keep $LEVEL_3_ID 
 	sort $LEVEL_3_ID
 	rename $LEVEL_3_ID level3id
-	gen level3name = ""
-	forvalues i = 1/`=_N' {
-		replace level3name= "`:label `=subinstr("$LEVEL_3_ID","DHS_${DHS_NUM}_","",.)' `=level3id[`i']''" in `i'
-	}
+	decode level3id, generate(level3name)
 	label value level3id 
 	save level3names, replace
 }
@@ -94,10 +90,7 @@ bysort $LEVEL_4_ID: keep if _n == 1
 keep $LEVEL_4_ID
 sort $LEVEL_4_ID
 rename $LEVEL_4_ID level4id
-gen level4name = ""
-forvalues i = 1/`=_N' {
-	replace level4name = "`:label `=subinstr("$LEVEL_4_ID","DHS_${DHS_NUM}_","",.)' `=level4id[`i']''" in `i'
-}
+decode level4id, generate(level4name)
 label value level4id
 save level4names, replace
 
