@@ -36,7 +36,7 @@ if $RI_SURVEY ==1 & $TT_SURVEY==1 {
 	use "${DHS_KR_DATA}", clear
 	
 	* drop if the child is no longer alive
-	drop if b5==0
+	drop if ${CHILD_IS_ALIVE}==0
 	
 	* Create variable to show RI Survey date
 	gen ri_survey_date=mdy(${RI_DATE_MONTH}, ${RI_DATE_DAY}, ${RI_DATE_YEAR})
@@ -127,7 +127,7 @@ if $RI_SURVEY ==1 & $TT_SURVEY!=1 {
 	label variable child_survey "Participated in Child Survey"
 	
 	* drop if the child is no longer alive
-	drop if b5==0
+	drop if ${CHILD_IS_ALIVE}==0
 	
 	
 	save "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", replace
@@ -151,7 +151,7 @@ if $RI_SURVEY ==1 & $TT_SURVEY!=1 {
 	gen h$RESPONDENT_LINE=$RESPONDENT_LINE
 	label variable h$RESPONDENT_LINE "TT line number repeated for merging purposes to uniquely identify each person"
 
-	* Determine if each persone can be uniquely identified
+	* Determine if each person can be uniquely identified
 	sort $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE $HM_LINE
 	bysort $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE $HM_LINE: gen not_unique=_n
 	gen do_not_keep=1 if not_unique>1

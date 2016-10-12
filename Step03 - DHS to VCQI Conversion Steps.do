@@ -13,6 +13,8 @@ Stata version:    14.0
 *				version
 * Date 			number 	Name			What Changed
 * 2016-10-12			Dale			Fixed typo when SIA is off
+* 2016-10-12			Dale			Do NOT use mother's DOB for eligilibity
+*										if they did a TT survey
 
 ********************************************************************************
 
@@ -44,8 +46,10 @@ foreach d in MONTH DAY YEAR {
 		local vlist`d'_ri ${CHILD_DOB_HIST_`d'}
 	}
 	
+	
+	* Do NOT use the mother's birthday for eligibility...commented out for now...
 	if ${TT_SURVEY}==1 {
-		local vlist`d'_tt ${MOTHER_DOB_`d'}
+		*local vlist`d'_tt ${MOTHER_DOB_`d'}
 	}
 
 	if $HH_DOB == 1 {
