@@ -12,7 +12,15 @@ Author:         Mary Kay Trimner
 
 Stata version:    14.0
 **********************************************************************/
-set more off
+*******************************************************************************
+* Change log
+* 				Updated
+*				version
+* Date 			number 	Name			What Changed
+* 2016-10-12			Dale			Only generate SIA files if user 
+*										wants to analyze the SIA datasets
+
+********************************************************************************
 
 * Pull in DHS combined dataset and save as new dataset for VCQI
 use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
@@ -34,14 +42,15 @@ drop if HM19!=4
 save, replace
 
 * Save dataset for each SIA survey and rename each HM41 variable
-foreach v in `=lower("${SIA_LIST}")' {
-	use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_to_VCQI_HM", clear
-	rename HM41_`v' HM41
-	drop HM41_*
-	
-	rename HM42_`v' HM42
-	drop HM42_*
-	
-	save DHS_${DHS_NUM}_VCQI_HM_SIA_`=upper("`v'")', replace
+if $SIA_SURVEY==1 {
+	foreach v in `=lower("${SIA_LIST}")' {
+		use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_to_VCQI_HM", clear
+		rename HM41_`v' HM41
+		drop HM41_*
+		
+		rename HM42_`v' HM42
+		drop HM42_*
+		
+		save DHS_${DHS_NUM}_VCQI_HM_SIA_`=upper("`v'")', replace
+	}
 }
-

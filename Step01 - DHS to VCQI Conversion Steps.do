@@ -7,7 +7,17 @@ Date Created:    			2016-06-09
 Author:         Mary Kay Trimner
 Stata version:    14.0
 ********************************************************************************/
-set more off
+
+*******************************************************************************
+* Change log
+* 				Updated
+*				version
+* Date 			number 	Name			What Changed
+* 2016-10-12			Dale			Change hid to hhid in line 162
+*										(Thanks to David Brown)
+
+********************************************************************************
+
 * Create one large dataset
 cd "${INPUT_FOLDER}"
 
@@ -159,7 +169,7 @@ if $RI_SURVEY ==1 & $TT_SURVEY!=1 {
 	save, replace
 
 	* Merge in Household data
-	merge m:1 hid $STRATUM_ID $HH_ID $CLUSTER_ID h$RESPONDENT_LINE using "${DHS_HR_DATA}" //Merge with HM
+	merge m:1 hhid $STRATUM_ID $HH_ID $CLUSTER_ID h$RESPONDENT_LINE using "${DHS_HR_DATA}" //Merge with HM
 
 	drop _merge
 
