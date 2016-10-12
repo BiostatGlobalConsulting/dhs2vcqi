@@ -7,17 +7,15 @@ Date Created:    			2016-04-28
 Date Modified:  
 Input Data:                 
 Output2:                                
-Comments: Take DHS combined dataset with new VCQI vaTTables and create datasets so that the data can be run through VCQI
-Author:         Mary Kay TTTmner
+Comments: Take DHS combined dataset with new VCQI variables and create datasets so that the data can be run through VCQI
+Author:         Mary Kay Trimner
 
 Stata version:    14.0
 **********************************************************************/
-set more off
 
 if $TT_SURVEY==1 {
 	* Pull in DHS combined dataset and save as new dataset for VCQI
 	use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
-
 
 	* cd to OUTPUT local
 	cd "$OUTPUT_FOLDER"

@@ -7,7 +7,15 @@ Date Created:    			2016-06-09
 Author:         Mary Kay Trimner
 Stata version:    14.0
 ********************************************************************************/
-set more off
+*******************************************************************************
+* Change log
+* 				Updated
+*				version
+* Date 			number 	Name			What Changed
+* 2016-10-12			Dale			Added CHILD_IS_ALIVE and 
+*										CHILD_BORN_ALIVE to varlist
+
+********************************************************************************
 
 * The below globals are required for all DHS to VCQI Conversion
 
@@ -80,7 +88,7 @@ else {
 * These variables are not required in the surveys but if populated need to ensure the variable exists
  foreach v in DATE_OF_BIRTH_MONTH DATE_OF_BIRTH_YEAR DATE_OF_BIRTH_DAY AGE_YEARS DATE_OF_BIRTH AGE_MONTHS ///
 				CHILD_AGE_MONTHS CHILD_AGE_YEARS CHILD_DOB_CARD_MONTH CHILD_DOB_CARD_DAY CHILD_DOB_CARD_YEAR LEVEL_4_ID ///
-				MOTHER_DOB_DAY MOTHER_AGE_YEARS TT_LAST_BIRTH_MONTHS LAST_TT_MONTH LAST_TT_YEAR {
+				MOTHER_DOB_DAY MOTHER_AGE_YEARS TT_LAST_BIRTH_MONTHS LAST_TT_MONTH LAST_TT_YEAR CHILD_IS_ALIVE CHILD_BORN_ALIVE {
 			if "$`v'"!="" {
 			capture confirm variable ${`v'}
 				if !_rc {

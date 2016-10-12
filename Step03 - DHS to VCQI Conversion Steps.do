@@ -7,8 +7,16 @@ Date Created:    			2016-04-28
 Author:         Mary Kay Trimner
 Stata version:    14.0
 ********************************************************************************/
-use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
+*******************************************************************************
+* Change log
+* 				Updated
+*				version
+* Date 			number 	Name			What Changed
+* 2016-10-12			Dale			Fixed typo when SIA is off
 
+********************************************************************************
+
+use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
 
 *********************************************************************************
 *********************************************************************************
@@ -290,7 +298,7 @@ label variable HH24 "# of Eligible Respondents: Gave Live Birth in Last 12 Month
 	}
 	else {
 		foreach v in `=lower("${SIA_LIST}")' {
-			egen HH25_`v'=0
+			gen HH25_`v'=0
 			label variable HH25_`v' "# of Eligible Respondents: Post-Campaign Survey"
 		}
 	}
@@ -700,15 +708,15 @@ if $SIA_SURVEY==1 {
 		gen SIA`v'=.
 	}
 	
-	label variable SIA21 "Did the child receive a vaccination card after receiving the measles/rubella vaccination during the campaign?"
-	label variable SIA22 "Was the finger of the child marked with a pen after receiving the measles/rubella vaccine during the campaign?"
-	label variable SIA27 "Before the campaign, had the child already received the measles/rubella vaccine?"
-	label variable SIA28 "If the vaccination record (routine) is available, record the dates of vaccination: 1st Measles Vaccination"
-	label variable SIA29 "If the vaccination record (routine) is available, is 2nd Measles vaccination recorded with a tick mark instead of a date?"
-	label variable SIA30 "If the vaccination record (routine) is available, record the dates of vaccination: 2nd Measles Vaccination"
-	label variable SIA31 "If the vaccination record (routine) is available, is 1st Measles vaccination recorded with a tick mark instead of a date?"
-	label variable SIA32 "If the vaccination record (previous campaign) is available, record the dates of vaccination: 1st Measles campaign vaccination"
-	label variable SIA33 "If the vaccination record (previous campaign) is available, record the dates of vaccination: 2nd measles vaccination"
+	label variable SIA21 "Did child receive a campaign card?"
+	label variable SIA22 "Was the child's finger marked?"
+	label variable SIA27 "Had the child received measles vaccine before campaign?"
+	label variable SIA28 "Date of 1st measles Vaccination, if record available"
+	label variable SIA29 "1st measles vaccination recorded with a tick mark"
+	label variable SIA30 "Date of 2nd measles Vaccination, if record available"
+	label variable SIA31 "2nd measles vaccination recorded with a tick mark?"
+	label variable SIA32 "Date of 1st measles campaign vaccination"
+	label variable SIA33 "Date of 2nd measles vaccination"
 
 	save, replace
 }

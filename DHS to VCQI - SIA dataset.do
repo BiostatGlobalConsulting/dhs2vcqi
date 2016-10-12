@@ -12,7 +12,6 @@ Author:         Mary Kay Trimner
 
 Stata version:    14.0
 **********************************************************************/
-set more off
 
 if $SIA_SURVEY==1 {
 
