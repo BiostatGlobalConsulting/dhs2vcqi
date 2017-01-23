@@ -12,6 +12,17 @@ Author:         Mary Kay Trimner
 
 Stata version:    14.0
 **********************************************************************/
+
+*******************************************************************************
+* Change log
+* 				Updated
+*				version
+* Date 			number 	Name			What Changed
+* 2016-10-17			Dale Rhoda		Strip missing ids from levelX_order
+* 										datasets
+
+********************************************************************************
+
 * Set globals to help run the below program
 
 	
@@ -46,6 +57,7 @@ clear
 use level2names
 drop level2name
 gen level2order = _n
+drop if missing(level2id)
 save level2order, replace
 
 * Create level3name dataset
@@ -66,7 +78,7 @@ if wordcount("$LEVEL_3_ID") > 1 {
 
 }
 else {
-	bysort $LEVEL_3_ID: keep if _n == 1
+	bysort $LEVEL_3_ID: keep if _n == 1 & !missing($LEVEL_3_ID)
 	keep $LEVEL_3_ID 
 	sort $LEVEL_3_ID
 	rename $LEVEL_3_ID level3id
@@ -86,7 +98,7 @@ save level3order, replace
 
 clear
 use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
-bysort $LEVEL_4_ID: keep if _n == 1
+bysort $LEVEL_4_ID: keep if _n == 1 & !missing($LEVEL_4_ID)
 keep $LEVEL_4_ID
 sort $LEVEL_4_ID
 rename $LEVEL_4_ID level4id
