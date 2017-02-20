@@ -1,5 +1,5 @@
 /**********************************************************************
-Program Name:               Step04- DHS to VCQI Converstion Steps 
+Program Name:               Step04 - DHS to VCQI Conversion Steps 
 Purpose:                    Create the datasets 
 *													
 Project:                    Q:\- WHO DHS VCQI-compatible\DHS manuals
