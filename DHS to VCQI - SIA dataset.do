@@ -1,6 +1,6 @@
 /**********************************************************************
-Program Name:               DHS to VCQI -SIA dataset
-Purpose:                     Code to create VCQI dataset using DHS questionnaire
+Program Name:               DHS to VCQI - SIA dataset
+Purpose:                    Code to create VCQI dataset using DHS questionnaire
 Project:                    Q:\- WHO DHS VCQI-compatible\DHS manuals
 Charge Number:  
 Date Created:    			2016-04-28
@@ -19,7 +19,7 @@ if $SIA_SURVEY==1 {
 	use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
 
 
-	* cd to OUTPUT local
+	* cd to Output folder
 	cd "$OUTPUT_FOLDER"
 
 	save DHS_${DHS_NUM}_to_VCQI_SIA, replace 
