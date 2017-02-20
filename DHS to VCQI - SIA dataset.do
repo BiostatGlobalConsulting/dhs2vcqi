@@ -60,9 +60,13 @@ if $SIA_SURVEY==1 {
 		
 		* Rename variable so there is only one per SIA survey
 		rename SIA20_`v' SIA20
-		drop SIA20_* 
 		keep if sia_participant_`v'==1
-		drop sia_participant_*
+		
+		* Only drop SIA20_* and sia_participant_* if there is more than 1 campaign
+		if `=wordcount("${SIA_LIST}")'>1 {
+			drop SIA20_* 
+			drop sia_participant_*
+		}
 		
 		save DHS_${DHS_NUM}_VCQI_SIA_`=upper("`v'")', replace
 	}
