@@ -1,5 +1,5 @@
 /**********************************************************************
-Program Name:               DHS to VCQI -TT dataset
+Program Name:               DHS to VCQI - TT dataset
 Purpose:                    Code to create VCQI dataset using DHS questionnaire
 Project:                    Q:\- WHO DHS VCQI-compatible\DHS manuals
 Charge Number:  
@@ -17,7 +17,7 @@ if $TT_SURVEY==1 {
 	* Pull in DHS combined dataset and save as new dataset for VCQI
 	use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
 
-	* cd to OUTPUT local
+	* cd to Output folder
 	cd "$OUTPUT_FOLDER"
 
 	save DHS_${DHS_NUM}_to_VCQI_TT, replace 
