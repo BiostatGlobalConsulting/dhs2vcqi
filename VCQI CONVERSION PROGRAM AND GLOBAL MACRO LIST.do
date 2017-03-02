@@ -242,6 +242,10 @@ global VITA1_DATE_CARD_MONTH			h33m
 global VITA1_DATE_CARD_DAY				h33d
 global VITA1_DATE_CARD_YEAR				h33y
 
+* Additional variables to keep (usually multiple choice questions)
+* e.g. religion, education etc
+global RI_ADDITIONAL_VARS
+
 *******************************************************************************
 ********************************************************************************
 ********************************************************************************
