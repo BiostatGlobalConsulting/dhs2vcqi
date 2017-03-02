@@ -169,6 +169,9 @@ global CHILD_DOB_HIST_YEAR		b2 		// OPTIONAL -can be blank if not available if C
 global CHILD_AGE_YEARS			b8 		// OPTIONAL -can be blank if not available
 global CHILD_AGE_MONTHS			hw1		// OPTIONAL -can be blank if not available
 
+* Is the child alive?
+global CHILD_IS_ALIVE			b5
+
 * Provide a complete list of the RI doses, use the same dose names as the globals below
 * all dose numbers must be provided, so if there are three doses provide the dose1 dose2 dose3.
 
@@ -240,6 +243,10 @@ global VITA1							h33
 global VITA1_DATE_CARD_MONTH			h33m
 global VITA1_DATE_CARD_DAY				h33d
 global VITA1_DATE_CARD_YEAR				h33y
+
+* Additional variables to keep (usually multiple choice questions)
+* e.g. religion, education etc
+global RI_ADDITIONAL_VARS
 
 *******************************************************************************
 ********************************************************************************
@@ -342,6 +349,9 @@ global LAST_TT_YEAR				m1c 	// OPTIONAL -can be blank if not available
 * Last year of TT dose
 global YEARS_SINCE_LAST_TT		m1d
 
+* Was the child born alive?
+global CHILD_BORN_ALIVE
+
 ********************************************************************************
 ********************************************************************************
 ********************************************************************************
@@ -356,4 +366,4 @@ if !_rc {
 set more off
 
 * Run the program to create the datasets
-do "${RUN_FOLDER}/Step00- VCQI Conversion Steps.do" // Runs all the necessary steps to make dataset VCQI compatible
+do "${RUN_FOLDER}/Step00 - VCQI Conversion Steps.do" // Runs all the necessary steps to make dataset VCQI compatible

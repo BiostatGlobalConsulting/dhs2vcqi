@@ -46,7 +46,11 @@ if $SIA_SURVEY==1 {
 		use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_to_VCQI_HH", clear
 		rename HH25_`v' HH25
 		
-		drop HH25_* 
+		* Only drop HH25_* if there is more than 1 campaign
+		if `=wordcount("${SIA_LIST}")'>1 {
+			drop HH25_* 
+		}
+		
 		save DHS_${DHS_NUM}_VCQI_HH_SIA_`=upper("`v'")', replace
 	}
 }

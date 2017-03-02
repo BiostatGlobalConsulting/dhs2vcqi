@@ -519,8 +519,8 @@ if $RI_SURVEY==1 {
 		* Replace RI26=2 (No) if $CARD_SEEN==0 (No card)
 		replace RI26=2 if ${CARD_SEEN}==0
 
-		* Replace all other values to no
-		replace RI26=2 if !inlist(${CARD_SEEN},1,2,99)
+		* Replace all other values to missing
+		replace RI26=. if !inlist(RI26,1,2,99)
 		
 	
 	*label to correspond to VCQI

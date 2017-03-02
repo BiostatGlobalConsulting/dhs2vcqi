@@ -45,11 +45,13 @@ if $SIA_SURVEY==1 {
 	foreach v in `=lower("${SIA_LIST}")' {
 		use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_to_VCQI_HM", clear
 		rename HM41_`v' HM41
-		drop HM41_*
-		
 		rename HM42_`v' HM42
-		drop HM42_*
-		
+
+		* Only drop HM41_* & HM42_* if there is more than 1 campaign
+		if `=wordcount("${SIA_LIST}")'>1 {
+			drop HM41_*
+			drop HM42_*
+		}
 		save DHS_${DHS_NUM}_VCQI_HM_SIA_`=upper("`v'")', replace
 	}
 }
