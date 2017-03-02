@@ -1,6 +1,6 @@
 /**********************************************************************
-Program Name:               DHS to VCQI -RI dataset
-Purpose:                     Code to create VCQI dataset using DHS questionnaire
+Program Name:               DHS to VCQI - RI dataset
+Purpose:                    Code to create VCQI dataset using DHS questionnaire
 Project:                    Q:\- WHO DHS VCQI-compatible\DHS manuals
 Charge Number:  
 Date Created:    			2016-04-28
@@ -19,11 +19,10 @@ if $RI_SURVEY==1 {
 	use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
 
 
-	* cd to OUTPUT local
+	* cd to Output folder
 	cd "$OUTPUT_FOLDER"
 
 	save DHS_${DHS_NUM}_to_VCQI_RI, replace 
-
 
 	* Only keep the people who participated in the survey 
 	keep if DHS_${DHS_NUM}_child_survey==1 
@@ -38,7 +37,7 @@ if $RI_SURVEY==1 {
 		local dlist `dlist' `v'_date_card_* `v'_history `v'_tick_card dob_date_card_* dob_date_hist* 
 	}
 	
-	* Keep bcg_scar_history if bcg is part of the ri dose list
+	* Keep bcg_scar_history if bcg is part of the RI_LIST
 	if strpos("`=lower("$RI_LIST")'","bcg")!=0 {
 		local dlist `dlist' bcg_scar_history
 	}

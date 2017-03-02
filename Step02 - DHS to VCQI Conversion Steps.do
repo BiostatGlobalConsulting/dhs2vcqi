@@ -1,5 +1,5 @@
 /**********************************************************************
-Program Name:               Step02- DHS to VCQI Converstion Steps 
+Program Name:               Step02 - DHS to VCQI Conversion Steps 
 Purpose:                    Checks to make sure all necessary globals are populated 
 *													
 Project:                    Q:\- WHO DHS VCQI-compatible\DHS manuals
@@ -43,7 +43,7 @@ else {
 		}
 }
 
-* Level3id is a little different and may have two variables. You will need to check each varaible
+* Level3id is a little different and may have two variables. You will need to check each variable
 * Check to make sure the global is populated
 if "$LEVEL_3_ID"=="" {
 	di as error "Global macro LEVEL_3_ID must be defined to complete the any analysis"
@@ -66,26 +66,26 @@ else {
 
 	
 	
-	foreach v in STRATUM_ID STRATUM_NAME CLUSTER_ID CLUSTER_NAME HH_ID HH_DATE_MONTH ///
-			HH_DATE_DAY HH_DATE_YEAR HM_LINE OVERALL_DISPOSITION PSWEIGHT_1YEAR ///		
-			PSWEIGHT_SIA URBAN_CLUSTER SEX {			
-		
-		if "$`v'"=="" {
-			di as error "Global macro `v' must be defined to complete the any analysis"
-		}
-		else {
-			capture confirm variable ${`v'}
-				if !_rc {
-					global `v' 	DHS_${DHS_NUM}_${`v'}	
-				}
-				else {
-					di as error ///
-					"Variable ${`v'} provided in global macro `v' does not exist" //Let the user know if a variable does not exist in dataset
-				}
-		}
+foreach v in STRATUM_ID STRATUM_NAME CLUSTER_ID CLUSTER_NAME HH_ID HH_DATE_MONTH ///
+		HH_DATE_DAY HH_DATE_YEAR HM_LINE OVERALL_DISPOSITION PSWEIGHT_1YEAR ///		
+		PSWEIGHT_SIA URBAN_CLUSTER SEX {			
+	
+	if "$`v'"=="" {
+		di as error "Global macro `v' must be defined to complete the any analysis"
+	}
+	else {
+		capture confirm variable ${`v'}
+			if !_rc {
+				global `v' 	DHS_${DHS_NUM}_${`v'}	
+			}
+			else {
+				di as error ///
+				"Variable ${`v'} provided in global macro `v' does not exist" //Let the user know if a variable does not exist in dataset
+			}
+	}
 }
 
-* These variables are not required in the surveys but if populated need to ensure the variable exists
+* These variables are not required in the surveys but if populated need to verify the variable exists
  foreach v in DATE_OF_BIRTH_MONTH DATE_OF_BIRTH_YEAR DATE_OF_BIRTH_DAY AGE_YEARS DATE_OF_BIRTH AGE_MONTHS ///
 				CHILD_AGE_MONTHS CHILD_AGE_YEARS CHILD_DOB_CARD_MONTH CHILD_DOB_CARD_DAY CHILD_DOB_CARD_YEAR LEVEL_4_ID ///
 				MOTHER_DOB_DAY MOTHER_AGE_YEARS TT_LAST_BIRTH_MONTHS LAST_TT_MONTH LAST_TT_YEAR CHILD_IS_ALIVE CHILD_BORN_ALIVE {
@@ -105,14 +105,14 @@ else {
 
 if $RI_SURVEY==1 {
 
-* Check that all non variable globals are populated if required
+* Check that all non-variable globals are populated if required
 	foreach v in RI_MIN_AGE RI_MAX_AGE RI_LIST {
 		if "$`v'"=="" {
 			di as error "Global macro `v' must be defined to complete the RI analysis"
 		}
 	}
 		
-	foreach v in  RI_DISPOSITION CARD_SEEN ///
+	foreach v in RI_DISPOSITION CARD_SEEN ///
 				  RI_DATE_MONTH RI_DATE_DAY RI_DATE_YEAR CHILD_DOB_HIST_MONTH CHILD_DOB_HIST_DAY ///
 				  CHILD_DOB_HIST_YEAR RI_LINE RESPONDENT_LINE {
 			  

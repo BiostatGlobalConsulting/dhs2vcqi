@@ -1,6 +1,6 @@
 /**********************************************************************
 Program Name:               VCQI Conversion and Global Macro List – DHS to VCQI  
-Purpose:                    User populates the below globals and the values are used to conver the dataset to VCQI 
+Purpose:                    User populates the below globals and the values are used to convert the dataset to VCQI 
 *							
 Project:                    Q:\- WHO DHS VCQI-compatible\DHS manuals
 Date Created:    			2016-06-08
@@ -16,7 +16,7 @@ clear 				// Need to clear out any existing data to run the next command
 clear mata		 	// Need to clear out mata to avoid errors.
 set maxvar 32767	// Change maxvar to the largest possible value to avoid errors while importing data.
 
-* The majority of the globals listed below are required in order to run this program.
+* Most globals listed below are required to run this program.
 * However, some are not needed but if populated can help provide additional information to the dataset. These will be noted as optional.
 
 * Populate the below global with the version of DHS survey (Phase number) that is being used (example 4, 5, 6,7)
@@ -25,7 +25,7 @@ global DHS_NUM
 * Path where DHS to VCQI conversion programs are saved
 global RUN_FOLDER Q:\- WHO DHS VCQI-compatible\Stata Programs
 
-* Path where STATA will grab the original DHS datasets
+* Path where STATA will grab the original DHS Stata datasets
 global INPUT_FOLDER 
 	
 * Path where you would like STATA to put the new datasets that can be run through VCQI
@@ -34,7 +34,7 @@ global OUTPUT_FOLDER
 * Name of DHS Datasets that will be used to create the VCQI Datasets
 global DHS_HR_DATA 	HR.dta //Household dataset (HR)
 global DHS_PR_DATA 	PR.dta //Household list/member dataset (PR)
-global DHS_IR_DATA 	IR.dta //Womens /TT dataset (IR)
+global DHS_IR_DATA 	IR.dta //Women's /TT dataset (IR)
 global DHS_KR_DATA 	KR.dta //Child dataset/RI & SIA (KR)
 
 
@@ -44,7 +44,7 @@ global DHS_KR_DATA 	KR.dta //Child dataset/RI & SIA (KR)
 
 *  The below global macros need to be defined to create HH, CM HM, RI, RIHC, SIA, TT DATASET
 *  Populate with corresponding variable name 
-*  Populate the below 5 globals with the variables from HR or PR datasets(begining with hv)
+*  Populate the below 5 globals with the variables from HR or PR datasets (beginning with hv)
 
 global STRATUM_ID 				hv024
 global STRATUM_NAME				hv024
@@ -58,10 +58,10 @@ global HH_ID 					hv002
 * They are not required but will be used to create level1 and level4 datasets if populated.
 * Level 2 will be populated with PROVINCE_ID provided below
 * Level 3 will be populated with STRATUM_ID provided above 
-* You can edit the DHS to VCQI -levels of datasets program if you do not want to use these values for Level2 and Level3.
-* If the below globals are not populated, you will need to edit the program DHS to VCQI -levels of datasets to create these datasets.
+* You can edit the DHS to VCQI - levels of datasets program if you do not want to use these values for Level2 and Level3.
+* If the below globals are not populated, you will need to edit the program DHS to VCQI - levels of datasets to create these datasets.
 
-* You will also need to edit the program DHS to VCQI -levels if you want to change the order. Current order is _n by levelid.
+* You will also need to edit the program DHS to VCQI - levels if you want to change the order. Current order is _n by levelid.
 * See user guide for specifics around each level
 
 * Name of Nation to be used in LEVEL1 dataset name
@@ -117,8 +117,8 @@ global AGE_MONTHS 				 		// OPTIONAL -can be blank if not available
 ********************************************************************************
 
 * * The below need to be defined to create CM DATASET
-* Provide the variable for the Post-stratified sampling weight for one-year cohorts (RI & TT)
 
+* Provide the variable for the Post-stratified sampling weight for one-year cohorts (RI & TT)
 global PSWEIGHT_1YEAR 			hv005
 
 * Provide the variable for the Post-stratified sampling weight for SIA cohort
@@ -181,6 +181,8 @@ global RI_LIST 		bcg opv0 opv1 opv2 opv3 dpt1 dpt2 dpt3
 * Global DOSE_NAME should be the variable that indicates if the dose was received, but is NOT the date.
 * The dates from the card should populate the globals immediately following.
 * NOTE: If the vaccine is not part of the survey, leave it bank
+* NOTE: If the vaccine is not listed in the globals below, create the globals with the dose name provided in RI_LIST
+
 * BCG 
 global BCG								h2
 global BCG_DATE_CARD_MONTH				h2m
@@ -303,27 +305,27 @@ global SIA_F					h36f
 ********************************************************************************
 ********************************************************************************
 
-* * The below need to be defined to create tt  DATASET
-* Was the TT(IR)/Womens survey completed? 1 yes, 0 no
+* * The below need to be defined to create TT  DATASET
+* Was the TT(IR)/Women's survey completed? 1 yes, 0 no
 global TT_SURVEY				1
 
 * Outcome for TT(IR) survey if survey completed
 * Example completed, refused, incomplete
 global TT_DISPOSITION 			ha65
 
-* Populate the below with the appropriate ages in months for the Womens TT(IR) Survey if TT Survey completed
+* Populate the below with the appropriate ages in months for the Women's TT(IR) Survey if TT Survey completed
 global TT_MIN_AGE				`=15*12'
 global TT_MAX_AGE				`=50*12'	
 
 * Populate the below with the variable names that correspond to the global name if the TT Survey was completed
 
-* House member line number in Womens(IR) dataset
+* House member line number in Women's(IR) dataset
 global TT_LINE 					v003
 
 * Populate the below if Mother DOB was collected 1==yes, 0==no
 global MOTHER_DOB				1
 
-* Womens Date of birth
+* Women's Date of birth
 global MOTHER_DOB_MONTH			v009
 global MOTHER_DOB_YEAR			v010
 global MOTHER_DOB_DAY					// OPTIONAL -can be blank if not available
@@ -340,7 +342,7 @@ global NUM_TT_PREGNANCY 		m1
 * Number of TT doses received prior to last pregnancy
 global NUM_TT_ANYTIME 			m1a
 
-* Month and Year of tt dose
+* Month and Year of last TT dose
 global LAST_TT_MONTH			m1b 	// OPTIONAL -can be blank if not available
 global LAST_TT_YEAR				m1c 	// OPTIONAL -can be blank if not available
 

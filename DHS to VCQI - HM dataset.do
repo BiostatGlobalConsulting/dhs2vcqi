@@ -1,6 +1,6 @@
 /**********************************************************************
-Program Name:               DHS to VCQI -HM dataset
-Purpose:                     Code to create VCQI dataset using DHS questionnaire
+Program Name:               DHS to VCQI - HM dataset
+Purpose:                    Code to create VCQI dataset using DHS questionnaire
 Project:                    Q:\- WHO DHS VCQI-compatible\DHS manuals
 Charge Number:  
 Date Created:    			2016-04-27
@@ -26,13 +26,12 @@ Stata version:    14.0
 use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
 
 
-* cd to OUTPUT local
+* cd to Output folder
 cd "$OUTPUT_FOLDER"
 
 save DHS_${DHS_NUM}_to_VCQI_HM, replace 
 
 * Drop all variables except HM
-
 keep HM* 
 aorder
 
@@ -41,7 +40,7 @@ drop if HM19!=4
 
 save, replace
 
-* Save dataset for each SIA survey and rename each HM41 variable
+* Save dataset for each SIA survey and rename each HM41 and HM42 variables
 if $SIA_SURVEY==1 {
 	foreach v in `=lower("${SIA_LIST}")' {
 		use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_to_VCQI_HM", clear

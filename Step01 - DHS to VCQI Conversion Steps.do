@@ -1,5 +1,5 @@
 /**********************************************************************
-Program Name:               Step01- DHS to VCQI Converstion Steps 
+Program Name:               Step01 - DHS to VCQI Conversion Steps 
 Purpose:                    Take the datasets provided by the user and create one large dataset 
 *													
 Project:                    Q:\- WHO DHS VCQI-compatible\DHS manuals
@@ -29,9 +29,9 @@ cd "${INPUT_FOLDER}"
 
 * There could be times when all the datasets are not provided. 
 * This code makes a large dataset contingent on which Surveys were completed
-* HH Data will always be provided, this is for TT,RI and RIHC
+* HH Data will always be provided, this is for TT, RI and RIHC
 
-* If RI (child) survey and TT (womens) survey were both completed
+* If RI (child) and TT (women's) surveys were both completed
 if $RI_SURVEY ==1 & $TT_SURVEY==1 {
 	use "${DHS_KR_DATA}", clear
 	
@@ -55,9 +55,9 @@ if $RI_SURVEY ==1 & $TT_SURVEY==1 {
 
 	append using "${DHS_IR_DATA}"
 
-	* Create variable to indicate Womens Survey
+	* Create variable to show the participant was part of the Women's Survey
 	replace tt_survey=1 if child_survey==. & !missing($NUM_TT_PREGNANCY)
-	label variable tt_survey "Participated in Womens/TT survey"
+	label variable tt_survey "Participated in Women's/TT survey"
 
 	* Create line number variable for merging purposes
 	gen ${HM_LINE}=${RI_LINE} 
@@ -75,11 +75,11 @@ if $RI_SURVEY ==1 & $TT_SURVEY==1 {
 	rename `=substr("$HH_ID",2,.)' $HH_ID //rename since the variable names vary from dataset
 	rename `=substr("$CLUSTER_ID",2,.)' $CLUSTER_ID //rename since the variable names vary from dataset
 	
-	* Rename reponsdent TT_LINE number for merging purposes
+	* Rename respondent TT_LINE number for merging purposes
 	gen h$RESPONDENT_LINE=$RESPONDENT_LINE
 	label variable h$RESPONDENT_LINE "TT line number repeated for merging purposes to uniquely identify each person"
 
-	* Determine if each persone can be uniquely identified
+	* Determine if each person can be uniquely identified
 	sort $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE $HM_LINE
 	bysort $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE $HM_LINE: gen not_unique=_n
 	gen do_not_keep=1 if not_unique>1
@@ -93,7 +93,7 @@ if $RI_SURVEY ==1 & $TT_SURVEY==1 {
 
 	save, replace
 	
-	* Merge in HH data
+	* Merge in Household (HH) data
 	merge m:1 hhid $STRATUM_ID $HH_ID $CLUSTER_ID using "${DHS_HR_DATA}" 
 	
 	* Create variable to show the date of TT survey
@@ -113,7 +113,7 @@ if $RI_SURVEY ==1 & $TT_SURVEY==1 {
 ********************************************************************************
 ********************************************************************************
 
-* If RI (child) survey completed but TT (womens) survey was NOT completed
+* If RI (child) survey completed but TT (women's) survey was NOT completed
 if $RI_SURVEY ==1 & $TT_SURVEY!=1 {
 	use "${DHS_KR_DATA}", clear
 
@@ -147,7 +147,7 @@ if $RI_SURVEY ==1 & $TT_SURVEY!=1 {
 	rename `=substr("$HH_ID",2,.)' $HH_ID //rename since the variable names vary from dataset
 	rename `=substr("$CLUSTER_ID",2,.)' $CLUSTER_ID //rename since the variable names vary from dataset
 	
-	* Rename reponsdent TT_LINE number for merging purposes
+	* Rename respondent TT_LINE number for merging purposes
 	gen h$RESPONDENT_LINE=$RESPONDENT_LINE
 	label variable h$RESPONDENT_LINE "TT line number repeated for merging purposes to uniquely identify each person"
 
@@ -180,16 +180,16 @@ if $RI_SURVEY ==1 & $TT_SURVEY!=1 {
 ********************************************************************************
 ********************************************************************************
 ********************************************************************************
-* If RI (child) survey was NOT completed but TT (womens) survey was completed
+* If RI (child) survey was NOT completed but TT (women's) survey was completed
 
 if $RI_SURVEY !=1 & $TT_SURVEY==1 {
 	use "${DHS_IR_DATA}", clear
 
 	save "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", replace
 
-	* Create variable to indicate Womens Survey
+	* Create variable to indicate Women's Survey
 	gen tt_survey=1 
-	label variable tt_survey "Participated in Womens/TT survey"
+	label variable tt_survey "Participated in Women's/TT survey"
 
 
 	* Create line number variable for merging purposes

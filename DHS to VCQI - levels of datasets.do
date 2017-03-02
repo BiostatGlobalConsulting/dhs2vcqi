@@ -1,6 +1,6 @@
 /**********************************************************************
-Program Name:               DHS to VCQI -levels of datasets
-Purpose:                     Code to create VCQI dataset using DHS questionnaire
+Program Name:               DHS to VCQI - levels of datasets
+Purpose:                    Code to create VCQI dataset using DHS questionnaire
 Project:                    Q:\- WHO DHS VCQI-compatible\DHS manuals
 Charge Number:  
 Date Created:    			2016-04-27
@@ -23,14 +23,11 @@ Stata version:    14.0
 
 ********************************************************************************
 
-* Set globals to help run the below program
-
-	
 * Bring in Combined dataset
 use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
 
-* cd to OUTPUT local
-	cd "$OUTPUT_FOLDER"
+* cd to Output folder
+cd "$OUTPUT_FOLDER"
 
 * Create level1name dataset
 clear
