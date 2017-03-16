@@ -170,7 +170,7 @@ global CHILD_AGE_YEARS			b8 		// OPTIONAL -can be blank if not available
 global CHILD_AGE_MONTHS			hw1		// OPTIONAL -can be blank if not available
 
 * Is the child alive?
-global CHILD_IS_ALIVE			b5
+global CHILD_IS_ALIVE			b5  // make this 1 if there is no variable in the dataset
 
 * Provide a complete list of the RI doses, use the same dose names as the globals below
 * all dose numbers must be provided, so if there are three doses provide the dose1 dose2 dose3.
@@ -350,7 +350,7 @@ global LAST_TT_YEAR				m1c 	// OPTIONAL -can be blank if not available
 global YEARS_SINCE_LAST_TT		m1d
 
 * Was the child born alive?
-global CHILD_BORN_ALIVE
+global CHILD_BORN_ALIVE 1		// Make this 1 if there is no variable in the dataset
 
 ********************************************************************************
 ********************************************************************************

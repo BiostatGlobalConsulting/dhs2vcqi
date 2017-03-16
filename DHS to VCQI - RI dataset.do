@@ -48,34 +48,34 @@ if $RI_SURVEY==1 {
 		if _rc == 0 local dlist `dlist' DHS_${DHS_NUM}_`v'
 	}
 
-	keep  RI* `dlist' ri_eligible age_months 
-	order RI* `dlist' ri_eligible age_months 
+	keep  RI* `dlist' ri_eligible age_months $CHILD_AGE_YEARS $CHILD_AGE_MONTHS
+	order RI* `dlist' ri_eligible age_months $CHILD_AGE_YEARS $CHILD_AGE_MONTHS
 
 
 	save, replace
 	
 	* Save dataset for age groups
 	* Age 12-23m
-	use "MICS_${MICS_NUM}_to_VCQI_RI", clear
-	keep if age_months >=12 & age_months <=23
-	save "MICS_${MICS_NUM}_to_VCQI_RI_12_to_23", replace 
+	use "DHS_${DHS_NUM}_to_VCQI_RI", clear
+	keep if  $CHILD_AGE_YEARS == 1
+	save "DHS_${DHS_NUM}_to_VCQI_RI_12_to_23", replace 
 
 	
 	* If max age is greather than 23m 
 	* Make a second dataset that captures 24m to $RI_MAX_AGE
 	if $RI_MAX_AGE >23 {
-		use "MICS_${MICS_NUM}_to_VCQI_RI", clear
-		keep if age_months >=24 & age_months <=$RI_MAX_AGE
-		save "MICS_${MICS_NUM}_to_VCQI_RI_24_to_${RI_MAX_AGE}", replace 
+		use "DHS_${DHS_NUM}_to_VCQI_RI", clear
+		keep if  $CHILD_AGE_YEARS > 1
+		save "DHS_${DHS_NUM}_to_VCQI_RI_24_to_${RI_MAX_AGE}", replace 
 	}
 
 	
 	* If min age does not equal 12
 	* Make a dataset with the ages provided
 	if $RI_MIN_AGE != 12 { 
-		use "MICS_${MICS_NUM}_to_VCQI_RI", clear
-		keep if age_months >=$RI_MIN_AGE & age_months <=$RI_MAX_AGE
-		save "MICS_${MICS_NUM}_to_VCQI_RI_${RI_MIN_AGE}_to_${RI_MAX_AGE}", replace 
+		use "DHS_${DHS_NUM}_to_VCQI_RI", clear
+		keep if  $CHILD_AGE_YEARS < 1
+		save "DHS_${DHS_NUM}_to_VCQI_RI_${RI_MIN_AGE}_to_${RI_MAX_AGE}", replace 
 	}
 
 }
