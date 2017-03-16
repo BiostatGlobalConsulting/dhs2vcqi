@@ -88,21 +88,3 @@ gen level3order = _n
 save level3order, replace
 
 **********************************************************************
-* Generate some level4 datasets
-
-clear
-use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
-bysort $LEVEL_4_ID: keep if _n == 1 & !missing($LEVEL_4_ID)
-keep $LEVEL_4_ID
-sort $LEVEL_4_ID
-rename $LEVEL_4_ID level4id
-decode level4id, generate(level4name)
-label value level4id
-save level4names, replace
-
-* Create level4order dataset
-clear
-use level4names
-drop level4name
-gen level4order = _n
-save level4order, replace
