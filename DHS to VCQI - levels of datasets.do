@@ -42,10 +42,7 @@ bysort $PROVINCE_ID: keep if _n == 1
 keep $PROVINCE_ID
 sort $PROVINCE_ID
 rename $PROVINCE_ID level2id
-gen level2name = ""
-forvalues i = 1/`=_N' {
-	replace level2name = "`:label `=subinstr("$PROVINCE_ID","DHS_${DHS_NUM}_","",.)' `=level2id[`i']''" in `i'
-}
+decode level2id, generate(level2name)
 label value level2id
 save level2names, replace
 
