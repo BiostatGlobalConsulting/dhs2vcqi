@@ -81,34 +81,41 @@ if $RI_SURVEY ==1 & $TT_SURVEY==1 {
 
 	* Determine if each person can be uniquely identified
 	sort $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE $HM_LINE
-	bysort $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE $HM_LINE: gen not_unique=_n
-	gen do_not_keep=1 if not_unique>1
-	replace do_not_keep=1 if not_unique[_n+1]>1 & not_unique[_n+1]!=.	
-	drop if do_not_keep==1
+	bysort $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE $HM_LINE: gen linecount=_N
+	
+	preserve
+	keep if linecount > 1
+	save not_unique, replace
+	restore
+	keep if linecount == 1
 	
 	* Merge in Household Member data
 	merge 1:1 $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE  $HM_LINE using "${DHS_PR_DATA}"
+	
+	keep if _merge == 1 | _merge == 3
 
 	drop _merge
-
-	save, replace
 	
-	* Merge in Household (HH) data
+	append using not_unique
+
+	* Merge in Household data
 	merge m:1 hhid $STRATUM_ID $HH_ID $CLUSTER_ID using "${DHS_HR_DATA}" 
+
+	keep if _merge == 1 | _merge == 3
+	
+	drop _merge
+	
+	drop linecount
 	
 	* Create variable to show the date of TT survey
 	gen tt_survey_date=mdy(${HH_DATE_MONTH}, ${HH_DATE_DAY}, ${HH_DATE_YEAR}) if tt_survey==1
 	format %td tt_survey_date
 	label variable tt_survey_date "Date of TT survey"
-	save, replace
-
-
-	drop _merge
 
 	save, replace
+
+}		
 	
-}
-
 ********************************************************************************
 ********************************************************************************
 ********************************************************************************
@@ -153,25 +160,36 @@ if $RI_SURVEY ==1 & $TT_SURVEY!=1 {
 
 	* Determine if each person can be uniquely identified
 	sort $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE $HM_LINE
-	bysort $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE $HM_LINE: gen not_unique=_n
-	gen do_not_keep=1 if not_unique>1
-	replace do_not_keep=1 if not_unique[_n+1]>1 & not_unique[_n+1]!=.	
-	drop if do_not_keep==1
+	bysort $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE $HM_LINE: gen linecount=_N
 	
 	* Rename caseid so it can be merged with Household members and Household list datasets
 	rename caseid hhid
 
+	preserve
+	keep if linecount > 1
+	save not_unique, replace
+	restore
+	keep if linecount == 1
+	
 	* Merge in Household Member data
 	merge 1:1 hhid $STRATUM_ID $HH_ID $CLUSTER_ID $HM_LINE using "${DHS_PR_DATA}"
+	
+	keep if _merge == 1 | _merge == 3
 
 	drop _merge
+	
+	append using not_unique
 
 	save, replace
 
 	* Merge in Household data
 	merge m:1 hhid $STRATUM_ID $HH_ID $CLUSTER_ID h$RESPONDENT_LINE using "${DHS_HR_DATA}" //Merge with HM
 
+	keep if _merge == 1 | _merge == 3
+	
 	drop _merge
+	
+	drop linecount
 
 	save, replace
 
