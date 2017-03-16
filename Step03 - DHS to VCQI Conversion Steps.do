@@ -300,12 +300,10 @@ label variable HH24 "# of Eligible Respondents: Gave Live Birth in Last 12 Month
 		}
 	}
 	else {
-		foreach v in `=lower("${SIA_LIST}")' {
-			gen HH25_`v'=0
-			label variable HH25_`v' "# of Eligible Respondents: Post-Campaign Survey"
-		}
+		gen HH25=0
+		label variable HH25 "# of Eligible Respondents: Post-Campaign Survey"
+		
 	}
-
 
 save, replace 
 *******************************************************************************************
@@ -513,7 +511,7 @@ if $RI_SURVEY==1 {
 	* Create RI26 Vaccination Card ever received?
 		gen RI26=.
 		
-		* Replace RI26=1 if ${CARD_SEEN} equals 1,2,3 as these indicate there was a card 1-Yes, Seen| 1- Yes, not seen | 3 No longer has card
+		* Replace RI26=1 if ${CARD_SEEN} equals 1,2,3 as these indicate there was a card 1-Yes, Seen| 2 - Yes, not seen | 3 No longer has card
 		replace RI26=1 if inlist(${CARD_SEEN},1,2,3)
 		
 		* Replace RI26=2 (No) if $CARD_SEEN==0 (No card)

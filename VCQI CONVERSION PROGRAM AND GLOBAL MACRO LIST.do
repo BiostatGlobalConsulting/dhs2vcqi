@@ -185,6 +185,7 @@ global RI_LIST 		bcg opv0 opv1 opv2 opv3 dpt1 dpt2 dpt3
 
 * BCG 
 global BCG								h2
+global BCG_SCAR								// OPTIONAL - can be left blank
 global BCG_DATE_CARD_MONTH				h2m
 global BCG_DATE_CARD_DAY				h2d
 global BCG_DATE_CARD_YEAR				h2y
