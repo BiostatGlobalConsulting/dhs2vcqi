@@ -499,6 +499,26 @@ if $RI_SURVEY==1 {
 
 	* Create variable RI03 Cluster ID number
 	clonevar RI03=HH03
+	
+	* Create variable RI09m RI09d RI09y RI09 Interview date
+	clonevar RI09=DHS_${DHS_NUM}_ri_survey_date
+	label variable RI09 "Date of RI Interview"
+	
+	* Create RI09_m RI09_d RI09_y variables
+	foreach v in m d y {
+		if "`v'"=="m" {
+			local i month
+		}
+		if "`v'"=="d" {
+			local i day
+		}
+		if "`v'"=="y" {
+			local i year
+		}
+		
+		gen RI09`v'=`i'(RI09)
+		label variable RI09`v' "Date of RI Interview: `i'"
+	} 
 
 	* Create variable RI11 Household ID
 	clonevar RI11=HH14
