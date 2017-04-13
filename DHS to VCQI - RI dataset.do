@@ -54,28 +54,4 @@ if $RI_SURVEY==1 {
 
 	save, replace
 	
-	* Save dataset for age groups
-	* Age 12-23m
-	use "DHS_${DHS_NUM}_to_VCQI_RI", clear
-	keep if  $CHILD_AGE_YEARS == 1
-	save "DHS_${DHS_NUM}_to_VCQI_RI_12_to_23", replace 
-
-	
-	* If max age is greather than 23m 
-	* Make a second dataset that captures 24m to $RI_MAX_AGE
-	if $RI_MAX_AGE >23 {
-		use "DHS_${DHS_NUM}_to_VCQI_RI", clear
-		keep if  $CHILD_AGE_YEARS > 1
-		save "DHS_${DHS_NUM}_to_VCQI_RI_24_to_${RI_MAX_AGE}", replace 
-	}
-
-	
-	* If min age does not equal 12
-	* Make a dataset with the ages provided
-	if $RI_MIN_AGE != 12 { 
-		use "DHS_${DHS_NUM}_to_VCQI_RI", clear
-		keep if  $CHILD_AGE_YEARS < 1
-		save "DHS_${DHS_NUM}_to_VCQI_RI_${RI_MIN_AGE}_to_${RI_MAX_AGE}", replace 
-	}
-
 }

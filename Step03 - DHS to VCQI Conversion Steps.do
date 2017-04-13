@@ -469,6 +469,8 @@ save, replace
 if "$PROVINCE_ID"=="" | "$PROVINCE_ID"=="1" {
 	gen province_id=1
 	label variable province_id "Level2"
+	label define level2 1 "Level2"
+	label value province_id level2
 	global PROVINCE_ID	province_id
 }
 else {
@@ -618,7 +620,7 @@ if $RI_SURVEY==1 {
 
 	* Create variable for dose history
 	foreach d in `=upper("${RI_LIST}")' {
-		gen `=lower("`d'")'_history=${`d'}
+		gen `=lower("`d'")'_history=.
 		label variable `=lower("`d'")'_history "`d' - history"
 		label value `=lower("`d'")'_history yesno
 		
@@ -626,7 +628,7 @@ if $RI_SURVEY==1 {
 		replace `=lower("`d'")'_history=1 if ${`d'}==2
 		replace `=lower("`d'")'_history=99 if ${`d'}==8
 		replace `=lower("`d'")'_history=2 if ${`d'}==0
-		replace `=lower("`d'")'_history=. if !inlist(${`d'},1,2,99)
+		replace `=lower("`d'")'_history=. if !inlist(`=lower("`d'")'_history,1,2,99)
 		
 	}
 	
@@ -644,7 +646,6 @@ if $RI_SURVEY==1 {
 		}
 	}
 
-	
 	* Replace dates with missing values if set to 0 |44 |4444 |97| 9997 | 9999 | 99 |98 |9998
 	local s card
 
