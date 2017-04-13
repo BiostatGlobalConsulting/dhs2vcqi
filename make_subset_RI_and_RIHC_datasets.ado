@@ -23,7 +23,7 @@ program define make_subset_RI_and_RIHC_datasets
 		use "`inputpath'", clear
 		
 		no di "Only keep the child if their age in months is greater than `minage' and less than `maxage'..."
-		keep if age_months >=`minage' & age_months <=`maxage'
+		keep if $CHILD_AGE_YEARS == 1
 	
 		no di "Save subset file as `inputpath'_`minage'_to_`maxage'"
 		save "`inputpath'_`minage'_to_`maxage'", replace 
