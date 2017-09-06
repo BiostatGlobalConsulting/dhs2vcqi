@@ -628,7 +628,8 @@ if $RI_SURVEY==1 {
 			
 			* Create tick marks for each dose 
 			gen `d'_tick_`v'=.
-			replace `d'_tick_`v'=1 if inlist(`d'_date_`v'_m,44,4444) | inlist(`d'_date_`v'_d,44,4444) | inlist(`d'_date_`v'_y,44,4444)
+			* Set tick to 1 if dose date is equal to 44/4444 (marked on card) or 97/9997 (Inconsisent)
+			replace `d'_tick_`v'=1 if inlist(`d'_date_`v'_m,44,4444,97,9997) | inlist(`d'_date_`v'_d,44,4444,97,9997) | inlist(`d'_date_`v'_y,44,4444,97,9997)
 			
 			*also replace tick to be 1 if $`v' is set to 3- Vacc marked on card
 			replace `d'_tick_`v'=1 if ${`=upper("`d'")'}==3
