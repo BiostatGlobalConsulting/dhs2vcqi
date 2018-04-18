@@ -15,7 +15,7 @@ Stata version:    14.0
 * 2016-10-12			Dale			Fixed typo when SIA is off
 * 2016-10-12			Dale			Do NOT use mother's DOB for eligibility
 *										if they did a TT survey
-
+*2018-04-18				MK Trimner		Changed code for HH04 if no value label to be a string
 ********************************************************************************
 
 use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
@@ -203,7 +203,7 @@ save, replace
 			}
 			else if missing(vallab) {
 				use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
-				gen HH04=HH03
+				tostring(HH03), gen(HH04)
 				save, replace
 			}
 	}
