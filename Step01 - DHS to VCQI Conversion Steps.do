@@ -15,7 +15,10 @@ Stata version:    14.0
 * Date 			number 	Name			What Changed
 * 2016-10-12			Dale			Change hid to hhid in line 162
 *										(Thanks to David Brown)
-
+* 2018-05-23			MK Trimner		Corrected line for merge with HM and HH datasets
+*										No longer using hhid, added respondent id
+*										Removed renaming of caseid to hhid as not needed
+	
 ********************************************************************************
 
 * Create one large dataset
@@ -90,7 +93,7 @@ if $RI_SURVEY ==1 & $TT_SURVEY==1 {
 	keep if linecount == 1
 	
 	* Merge in Household Member data
-	merge 1:1 $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE  $HM_LINE using "${DHS_PR_DATA}"
+	merge 1:1 $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE $HM_LINE using "${DHS_PR_DATA}"
 	
 	keep if _merge == 1 | _merge == 3
 
@@ -99,7 +102,7 @@ if $RI_SURVEY ==1 & $TT_SURVEY==1 {
 	append using not_unique
 
 	* Merge in Household data
-	merge m:1 hhid $STRATUM_ID $HH_ID $CLUSTER_ID using "${DHS_HR_DATA}" 
+	merge m:1 $STRATUM_ID $HH_ID $CLUSTER_ID using "${DHS_HR_DATA}" 
 
 	keep if _merge == 1 | _merge == 3
 	
@@ -162,9 +165,6 @@ if $RI_SURVEY ==1 & $TT_SURVEY!=1 {
 	sort $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE $HM_LINE
 	bysort $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE $HM_LINE: gen linecount=_N
 	
-	* Rename caseid so it can be merged with Household members and Household list datasets
-	rename caseid hhid
-
 	preserve
 	keep if linecount > 1
 	save not_unique, replace
@@ -172,7 +172,7 @@ if $RI_SURVEY ==1 & $TT_SURVEY!=1 {
 	keep if linecount == 1
 	
 	* Merge in Household Member data
-	merge 1:1 hhid $STRATUM_ID $HH_ID $CLUSTER_ID $HM_LINE using "${DHS_PR_DATA}"
+	merge 1:1 $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE $HM_LINE using "${DHS_PR_DATA}"
 	
 	keep if _merge == 1 | _merge == 3
 
@@ -183,7 +183,7 @@ if $RI_SURVEY ==1 & $TT_SURVEY!=1 {
 	save, replace
 
 	* Merge in Household data
-	merge m:1 hhid $STRATUM_ID $HH_ID $CLUSTER_ID h$RESPONDENT_LINE using "${DHS_HR_DATA}" //Merge with HM
+	merge m:1 $STRATUM_ID $CLUSTER_ID $HH_ID h$RESPONDENT_LINE using "${DHS_HR_DATA}" //Merge with HM
 
 	keep if _merge == 1 | _merge == 3
 	
