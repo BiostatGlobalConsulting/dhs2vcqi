@@ -172,6 +172,9 @@ global CHILD_AGE_MONTHS			hw1		// OPTIONAL -can be blank if not available
 * Is the child alive?
 global CHILD_IS_ALIVE			b5  // make this 1 if there is no variable in the dataset
 
+* Sex of child
+global CHILD_SEX				b4
+
 * Provide a complete list of the RI doses, use the same dose names as the globals below
 * all dose numbers must be provided, so if there are three doses provide the dose1 dose2 dose3.
 
