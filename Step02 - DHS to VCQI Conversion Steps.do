@@ -14,7 +14,7 @@ Stata version:    14.0
 * Date 			number 	Name			What Changed
 * 2016-10-12			Dale			Added CHILD_IS_ALIVE and 
 *										CHILD_BORN_ALIVE to varlist
-* 2018-05-30			MK Trimne		added global CHILD_SEX for RI dataset
+* 2018-05-30			MK Trimner		added global CHILD_SEX for RI dataset
 *										as optional input
 ********************************************************************************
 
