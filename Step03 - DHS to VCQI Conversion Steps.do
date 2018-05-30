@@ -16,7 +16,7 @@ Stata version:    14.0
 * 2016-10-12			Dale			Do NOT use mother's DOB for eligibility
 *										if they did a TT survey
 * 2018-05-30			MK Trimner		Added child sex to RI dataset from Child dataset
-* 2018-05-30			MK Trimner		Added code to set tickif card says vaccinated
+* 2018-05-30			MK Trimner		Added code to set tick if card says vaccinated
 *										but no date is present
 ********************************************************************************
 
