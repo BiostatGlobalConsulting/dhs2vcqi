@@ -119,13 +119,13 @@ global AGE_MONTHS 				 		// OPTIONAL -can be blank if not available
 * * The below need to be defined to create CM DATASET
 
 * Provide the variable for the Post-stratified sampling weight for one-year cohorts (RI & TT)
-global PSWEIGHT_1YEAR 			hv005
+global PSWEIGHT_1YEAR 			v005
 
 * Provide the variable for the Post-stratified sampling weight for SIA cohort
-global PSWEIGHT_SIA 			hv005
+global PSWEIGHT_SIA 			v005
 
 * Provide the variable that indicates if the area is urban or cluster
-global URBAN_CLUSTER 			hv025
+global URBAN_CLUSTER 			v025
 
 ********************************************************************************
 ********************************************************************************
