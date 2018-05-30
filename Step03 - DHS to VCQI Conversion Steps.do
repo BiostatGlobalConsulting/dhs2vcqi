@@ -15,8 +15,9 @@ Stata version:    14.0
 * 2016-10-12			Dale			Fixed typo when SIA is off
 * 2016-10-12			Dale			Do NOT use mother's DOB for eligibility
 *										if they did a TT survey
-* 20108-05-30			MK Trimner		Added child sex to RI dataset from Child dataset
-
+* 2018-05-30			MK Trimner		Added child sex to RI dataset from Child dataset
+* 2018-05-30			MK Trimner		Added code to set tickif card says vaccinated
+*										but no date is present
 ********************************************************************************
 
 use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
@@ -641,6 +642,10 @@ if $RI_SURVEY==1 {
 			
 			*also replace tick to be 1 if $`v' is set to 3- Vacc marked on card
 			replace `d'_tick_`v'=1 if ${`=upper("`d'")'}==3
+			
+			* If card says vaccinated but no date is present set tick
+			replace `d'_tick_`v' = 1 if ${`=upper("`d'")'}==1 & mdy(`d'_date_`v'_m,`d'_date_`v'_d,`d'_date_`v'_y)==.
+
 			
 			label variable `d'_tick_`v' "`d' tick mark on `v'"
 			
