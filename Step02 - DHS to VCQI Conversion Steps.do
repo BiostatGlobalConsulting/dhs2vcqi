@@ -14,7 +14,8 @@ Stata version:    14.0
 * Date 			number 	Name			What Changed
 * 2016-10-12			Dale			Added CHILD_IS_ALIVE and 
 *										CHILD_BORN_ALIVE to varlist
-
+* 2018-05-30			MK Trimner		added global CHILD_SEX for RI dataset
+*										as optional input
 ********************************************************************************
 
 * The below globals are required for all DHS to VCQI Conversion
@@ -88,7 +89,7 @@ foreach v in STRATUM_ID STRATUM_NAME CLUSTER_ID CLUSTER_NAME HH_ID HH_DATE_MONTH
 * These variables are not required in the surveys but if populated need to verify the variable exists
  foreach v in DATE_OF_BIRTH_MONTH DATE_OF_BIRTH_YEAR DATE_OF_BIRTH_DAY AGE_YEARS DATE_OF_BIRTH AGE_MONTHS ///
 				CHILD_AGE_MONTHS CHILD_AGE_YEARS CHILD_DOB_CARD_MONTH CHILD_DOB_CARD_DAY CHILD_DOB_CARD_YEAR LEVEL_4_ID ///
-				MOTHER_DOB_DAY MOTHER_AGE_YEARS TT_LAST_BIRTH_MONTHS LAST_TT_MONTH LAST_TT_YEAR CHILD_IS_ALIVE CHILD_BORN_ALIVE BCG_SCAR {
+				MOTHER_DOB_DAY MOTHER_AGE_YEARS TT_LAST_BIRTH_MONTHS LAST_TT_MONTH LAST_TT_YEAR CHILD_IS_ALIVE CHILD_BORN_ALIVE BCG_SCAR CHILD_SEX {
 			if "$`v'"!="" {
 			capture confirm variable ${`v'}
 				if !_rc {

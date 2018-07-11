@@ -15,6 +15,7 @@ Stata version:    14.0
 * 2016-10-12			Dale			Fixed typo when SIA is off
 * 2016-10-12			Dale			Do NOT use mother's DOB for eligibility
 *										if they did a TT survey
+* 20108-05-30			MK Trimner		Added child sex to RI dataset from Child dataset
 
 ********************************************************************************
 
@@ -560,7 +561,14 @@ if $RI_SURVEY==1 {
 	label value RI27 card_seen
 	
 	* Create RI20 Sex
-	clonevar RI20=HM27
+	if "${CHILD_SEX}"!="" {
+		clonevar RI20=${CHILD_SEX}
+	
+		replace RI20=HM27 if missing(RI20)
+	}
+	else {
+		clonevar RI20=HM27
+	}
 
 	**********************************************************************************
 	*Create dob for child history and card register if RIHC records sought
