@@ -119,13 +119,13 @@ global AGE_MONTHS 				 		// OPTIONAL -can be blank if not available
 * * The below need to be defined to create CM DATASET
 
 * Provide the variable for the Post-stratified sampling weight for one-year cohorts (RI & TT)
-global PSWEIGHT_1YEAR 			hv005
+global PSWEIGHT_1YEAR 			v005
 
 * Provide the variable for the Post-stratified sampling weight for SIA cohort
-global PSWEIGHT_SIA 			hv005
+global PSWEIGHT_SIA 			v005
 
 * Provide the variable that indicates if the area is urban or cluster
-global URBAN_CLUSTER 			hv025
+global URBAN_CLUSTER 			v025
 
 ********************************************************************************
 ********************************************************************************
@@ -171,6 +171,9 @@ global CHILD_AGE_MONTHS			hw1		// OPTIONAL -can be blank if not available
 
 * Is the child alive?
 global CHILD_IS_ALIVE			b5  // make this 1 if there is no variable in the dataset
+
+* Sex of child
+global CHILD_SEX				b4
 
 * Provide a complete list of the RI doses, use the same dose names as the globals below
 * all dose numbers must be provided, so if there are three doses provide the dose1 dose2 dose3.

@@ -15,7 +15,9 @@ Stata version:    14.0
 * 2016-10-12			Dale			Fixed typo when SIA is off
 * 2016-10-12			Dale			Do NOT use mother's DOB for eligibility
 *										if they did a TT survey
-
+* 2018-05-30			MK Trimner		Added child sex to RI dataset from Child dataset
+* 2018-05-30			MK Trimner		Added code to set tick if card says vaccinated
+*										but no date is present
 ********************************************************************************
 
 use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
@@ -560,12 +562,19 @@ if $RI_SURVEY==1 {
 	label value RI27 card_seen
 	
 	* Create RI20 Sex
-	clonevar RI20=HM27
+	if "${CHILD_SEX}"!="" {
+		clonevar RI20=${CHILD_SEX}
+	
+		replace RI20=HM27 if missing(RI20)
+	}
+	else {
+		clonevar RI20=HM27
+	}
 
 	**********************************************************************************
 	*Create dob for child history and card register if RIHC records sought
 	local g history card 
-
+	
 	foreach v in `g' {
 		if "`v'"=="history" {
 			local i HIST
@@ -573,7 +582,8 @@ if $RI_SURVEY==1 {
 		else if "`v'"=="card" {
 			local i CARD
 		}
-			
+		
+					
 		foreach d in m d y {
 			if "`d'"=="m" {
 				local c MONTH
@@ -602,11 +612,14 @@ if $RI_SURVEY==1 {
 	}
 
 	* Create all card and register variables
-	local s card
+	local s card register
 
 	foreach v in `s' {
 		if "`v'"=="card" {
 			local b "CARD"
+		}
+		else {
+			local b "REG"
 		}
 		foreach d in `=lower("${RI_LIST}")' {
 			foreach m in m d y {
@@ -632,7 +645,11 @@ if $RI_SURVEY==1 {
 			replace `d'_tick_`v'=1 if inlist(`d'_date_`v'_m,44,4444,97,9997) | inlist(`d'_date_`v'_d,44,4444,97,9997) | inlist(`d'_date_`v'_y,44,4444,97,9997)
 			
 			*also replace tick to be 1 if $`v' is set to 3- Vacc marked on card
-			replace `d'_tick_`v'=1 if ${`=upper("`d'")'}==3
+			replace `d'_tick_`v'=1 if ${`=upper("`d'")'_`b'}==3
+			
+			* If card says vaccinated but no date is present set tick
+			replace `d'_tick_`v' = 1 if ${`=upper("`d'")'}==1 & mdy(`d'_date_`v'_m,`d'_date_`v'_d,`d'_date_`v'_y)==.
+
 			
 			label variable `d'_tick_`v' "`d' tick mark on `v'"
 			
@@ -642,16 +659,27 @@ if $RI_SURVEY==1 {
 
 
 	* Create variable for dose history
+	local s card register
 	foreach d in `=upper("${RI_LIST}")' {
 		gen `=lower("`d'")'_history=.
 		label variable `=lower("`d'")'_history "`d' - history"
 		label value `=lower("`d'")'_history yesno
 		
-		* replace to a "no" or "do not know" value if history is set to that
-		replace `=lower("`d'")'_history=1 if ${`d'}==2
-		replace `=lower("`d'")'_history=99 if ${`d'}==8
-		replace `=lower("`d'")'_history=2 if ${`d'}==0
-		replace `=lower("`d'")'_history=. if !inlist(`=lower("`d'")'_history,1,2,99)
+		foreach v in `s' {
+			if "`v'"=="card" {
+				local b "CARD"
+			}
+			else {
+				local b "REG"
+			}
+
+			
+			* replace to a "no" or "do not know" value if history is set to that
+			replace `=lower("`d'")'_history=1 if ${`d'_`b'}==2
+			replace `=lower("`d'")'_history=99 if ${`d'_`b'}==8
+			replace `=lower("`d'")'_history=2 if ${`d'_`b'}==0
+			replace `=lower("`d'")'_history=. if !inlist(`=lower("`d'")'_history,1,2,99)
+		}
 		
 	}
 	
@@ -670,7 +698,7 @@ if $RI_SURVEY==1 {
 	}
 
 	* Replace dates with missing values if set to 0 |44 |4444 |97| 9997 | 9999 | 99 |98 |9998
-	local s card
+	local s card register
 
 	foreach g in `s' {
 		di "`s'"
@@ -680,6 +708,34 @@ if $RI_SURVEY==1 {
 			}
 		}
 	}
+}
+
+save, replace
+
+* Create RIHC variables
+if $RIHC_SURVEY==1 {
+
+	* Stratum ID
+	clonevar RIHC01=HH01
+	
+	* Cluster ID
+	clonevar RIHC03=HH03
+	
+	* Household ID
+	clonevar RIHC14=HH14
+	
+	* Individual ID
+	clonevar RIHC15=${RI_LINE}
+	
+	* Date of Birth on card or recall
+	gen RIHC21=mdy(dob_date_card_m,dob_date_card_d,dob_date_card_y)
+	format %td RIHC21
+	label variable RIHC21 "Date of birth (according to card seen in home (preferred) or caregiver recall on HH listing)"
+	
+	* Date of birth on register
+	gen RIHC22=mdy(dob_date_register_m,dob_date_register_d,dob_date_register_y)
+	format %td RIHC22
+	label variable RIHC22 "Date of birth (according to register)"
 }
 
 save, replace
