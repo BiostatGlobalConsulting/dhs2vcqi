@@ -18,6 +18,10 @@ Stata version:    14.0
 * 2018-05-30			MK Trimner		Added child sex to RI dataset from Child dataset
 * 2018-05-30			MK Trimner		Added code to set tick if card says vaccinated
 *										but no date is present
+* 2018-07-12			MK Trimner		Removed SOURCE from dose received variable to set tick
+*										This was a specific scenario that was 
+*										copied over in error
+*										Removed REG option - again copied in error
 ********************************************************************************
 
 use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
@@ -612,7 +616,7 @@ if $RI_SURVEY==1 {
 	}
 
 	* Create all card and register variables
-	local s card register
+	local s card //register
 
 	foreach v in `s' {
 		if "`v'"=="card" {
@@ -645,7 +649,7 @@ if $RI_SURVEY==1 {
 			replace `d'_tick_`v'=1 if inlist(`d'_date_`v'_m,44,4444,97,9997) | inlist(`d'_date_`v'_d,44,4444,97,9997) | inlist(`d'_date_`v'_y,44,4444,97,9997)
 			
 			*also replace tick to be 1 if $`v' is set to 3- Vacc marked on card
-			replace `d'_tick_`v'=1 if ${`=upper("`d'")'_`b'}==3
+			replace `d'_tick_`v'=1 if $`=upper("`d'")'==3
 			
 			* If card says vaccinated but no date is present set tick
 			replace `d'_tick_`v' = 1 if ${`=upper("`d'")'}==1 & mdy(`d'_date_`v'_m,`d'_date_`v'_d,`d'_date_`v'_y)==.
@@ -659,7 +663,7 @@ if $RI_SURVEY==1 {
 
 
 	* Create variable for dose history
-	local s card register
+	local s card //register
 	foreach d in `=upper("${RI_LIST}")' {
 		gen `=lower("`d'")'_history=.
 		label variable `=lower("`d'")'_history "`d' - history"
@@ -675,9 +679,9 @@ if $RI_SURVEY==1 {
 
 			
 			* replace to a "no" or "do not know" value if history is set to that
-			replace `=lower("`d'")'_history=1 if ${`d'_`b'}==2
-			replace `=lower("`d'")'_history=99 if ${`d'_`b'}==8
-			replace `=lower("`d'")'_history=2 if ${`d'_`b'}==0
+			replace `=lower("`d'")'_history=1 if ${`d'}==2
+			replace `=lower("`d'")'_history=99 if ${`d'}==8
+			replace `=lower("`d'")'_history=2 if ${`d'}==0
 			replace `=lower("`d'")'_history=. if !inlist(`=lower("`d'")'_history,1,2,99)
 		}
 		
@@ -698,10 +702,9 @@ if $RI_SURVEY==1 {
 	}
 
 	* Replace dates with missing values if set to 0 |44 |4444 |97| 9997 | 9999 | 99 |98 |9998
-	local s card register
+	local s card //register
 
 	foreach g in `s' {
-		di "`s'"
 		foreach v in `=lower("${RI_LIST}")' {
 			foreach m in m d y {
 				replace `v'_date_`s'_`m'=. if inlist(`v'_date_`s'_`m',0,44,4444,97,9997,99,9999,98,9998)
