@@ -20,6 +20,7 @@ Stata version:    14.0
 * Date 			number 	Name			What Changed
 * 2016-10-17			Dale Rhoda		Strip missing ids from levelX_order
 * 										datasets
+* 2019-02-06	1.02	MK Trimner		Made the names proper case
 
 ********************************************************************************
 
@@ -34,6 +35,7 @@ clear
 set obs 1
 generate level1id = 1 in 1
 generate level1name = "${LEVEL1_NAME}" in 1
+replace level1name = proper(level1name)
 save level1name, replace
 
 * Create level2names dataset
@@ -43,6 +45,7 @@ keep $PROVINCE_ID
 sort $PROVINCE_ID
 rename $PROVINCE_ID level2id
 decode level2id, generate(level2name)
+replace level2name = proper(level2name)
 label value level2id
 save level2names, replace
 
@@ -64,6 +67,8 @@ if wordcount("$LEVEL_3_ID") > 1 {
 	forvalue i = 1/`=_N' {
 		replace level3name="`:label l3id `=level3id[`i']''" in `i'
 	}
+	replace level3name = proper(level3name)
+	
 	bysort level3id: keep if _n==1
 	sort level3id
 	keep level3*
@@ -77,9 +82,11 @@ else {
 	sort $LEVEL_3_ID
 	rename $LEVEL_3_ID level3id
 	decode level3id, generate(level3name)
+	replace level3name = proper(level3name)
 	label value level3id 
 	save level3names, replace
 }
+
 * Create level3order dataset
 clear
 use level3names

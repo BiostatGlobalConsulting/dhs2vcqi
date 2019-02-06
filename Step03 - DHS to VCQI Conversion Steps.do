@@ -22,6 +22,8 @@ Stata version:    14.0
 *										This was a specific scenario that was 
 *										copied over in error
 *										Removed REG option - again copied in error
+* 2019-02-06			MK Trimner		Remove dob from card if not present on card...
+*										currently mirrored from history
 ********************************************************************************
 
 use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
@@ -607,12 +609,6 @@ if $RI_SURVEY==1 {
 				replace dob_date_`v'_`d'=. if inlist(dob_date_`v'_`d',44,4444,66,6666)
 			}
 		}
-	}
-
-	* If no card dob data provided, replace with history dob information 
-	foreach d in m d y {
-		replace dob_date_card_`d'=dob_date_history_`d' if missing(dob_date_card_`d') & !missing(dob_date_history_`d')
-		
 	}
 
 	* Create all card and register variables
