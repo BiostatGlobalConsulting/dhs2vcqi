@@ -24,6 +24,7 @@ Stata version:    14.0
 *										Removed REG option - again copied in error
 * 2019-02-06			MK Trimner		Remove dob from card if not present on card...
 *										currently mirrored from history
+* 2019-12-05			MK Trimner		Made HH_ID and Cluster name strings
 ********************************************************************************
 
 use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
@@ -211,7 +212,7 @@ save, replace
 			}
 			else if missing(vallab) {
 				use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
-				gen HH04=HH03
+				tostring HH03, gen(HH04) //gen HH04=HH03
 				save, replace
 			}
 	}
@@ -227,7 +228,7 @@ label value HH03
 
 ****************************************************************
 * Create variable for HH14 household number
-clonevar HH14=$HH_ID
+tostring $HH_ID, gen(HH14) //clonevar HH14=$HH_ID
 
 ****************************************************************
 * Create VCQI Variable HH12
@@ -326,7 +327,7 @@ clonevar HM01=HH01
 clonevar HM02=HH02
 clonevar HM03=HH03
 clonevar HM04=HH04
-clonevar HM09=${HH_ID}
+tostring $HH_ID, gen(HM09) //clonevar HM09=${HH_ID}
 clonevar HM22=${HM_LINE}
 
 * Create variables for HM27(sex), HM29(age years) and HM30(age months) 
