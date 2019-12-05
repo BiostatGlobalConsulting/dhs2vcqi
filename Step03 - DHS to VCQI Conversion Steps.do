@@ -25,6 +25,8 @@ Stata version:    14.0
 * 2019-02-06			MK Trimner		Remove dob from card if not present on card...
 *										currently mirrored from history
 * 2019-12-05			MK Trimner		Made HH_ID and Cluster name strings
+*										Made change to make line number unique.. this accounts for those children with line number 0
+*										This is done with HM22... Then just set RI line number to be this value
 ********************************************************************************
 
 use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
@@ -330,6 +332,14 @@ clonevar HM04=HH04
 tostring $HH_ID, gen(HM09) //clonevar HM09=${HH_ID}
 clonevar HM22=${HM_LINE}
 
+* Need to make line number unique... specifically when linenumber is 0
+* sort and add _n value after it
+sort HM01 HM03 HM09 HM22 DHS_${DHS_NUM}_bord, stable
+bysort HM01 HM03 HM09 HM22: gen n = _n
+tostring HM22, replace
+replace HM22 = HM22 + "." + string(n)
+destring HM22, replace
+
 * Create variables for HM27(sex), HM29(age years) and HM30(age months) 
 * using the previously calculated age_years and age_months even if populated with 1 for day as this will not impact these numbers
 clonevar HM27=${SEX}
@@ -537,7 +547,7 @@ if $RI_SURVEY==1 {
 	* Create RI12 Individual Number
 	*gen RI12=string(${RI_LINE}) + "_"  + string(${TT_LINE})
 	*label variable RI12  "Unique number for child using the Respondent's line number and child line number"
-	gen RI12 = ${HM_LINE}
+	gen RI12 = HM22 //${HM_LINE}
 	label variable RI12 "Respondent line number from HM dataset"
 	* Create RI26 Vaccination Card ever received?
 		gen RI26=.
