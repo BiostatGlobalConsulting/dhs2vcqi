@@ -18,6 +18,15 @@ Stata version:    14.0
 * 2018-05-30			MK Trimner		Added child sex to RI dataset from Child dataset
 * 2018-05-30			MK Trimner		Added code to set tick if card says vaccinated
 *										but no date is present
+* 2018-07-12			MK Trimner		Removed SOURCE from dose received variable to set tick
+*										This was a specific scenario that was 
+*										copied over in error
+*										Removed REG option - again copied in error
+* 2019-02-06			MK Trimner		Remove dob from card if not present on card...
+*										currently mirrored from history
+* 2019-12-05			MK Trimner		Made HH_ID and Cluster name strings
+*										Made change to make line number unique.. this accounts for those children with line number 0
+*										This is done with HM22... Then just set RI line number to be this value
 ********************************************************************************
 
 use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
@@ -205,7 +214,7 @@ save, replace
 			}
 			else if missing(vallab) {
 				use "${OUTPUT_FOLDER}/DHS_${DHS_NUM}_combined_dataset", clear
-				gen HH04=HH03
+				tostring HH03, gen(HH04) //gen HH04=HH03
 				save, replace
 			}
 	}
@@ -221,7 +230,7 @@ label value HH03
 
 ****************************************************************
 * Create variable for HH14 household number
-clonevar HH14=$HH_ID
+tostring $HH_ID, gen(HH14) //clonevar HH14=$HH_ID
 
 ****************************************************************
 * Create VCQI Variable HH12
@@ -320,8 +329,16 @@ clonevar HM01=HH01
 clonevar HM02=HH02
 clonevar HM03=HH03
 clonevar HM04=HH04
-clonevar HM09=${HH_ID}
+tostring $HH_ID, gen(HM09) //clonevar HM09=${HH_ID}
 clonevar HM22=${HM_LINE}
+
+* Need to make line number unique... specifically when linenumber is 0
+* sort and add _n value after it
+sort HM01 HM03 HM09 HM22 DHS_${DHS_NUM}_bord, stable
+bysort HM01 HM03 HM09 HM22: gen n = _n
+tostring HM22, replace
+replace HM22 = HM22 + "." + string(n)
+destring HM22, replace
 
 * Create variables for HM27(sex), HM29(age years) and HM30(age months) 
 * using the previously calculated age_years and age_months even if populated with 1 for day as this will not impact these numbers
@@ -530,7 +547,7 @@ if $RI_SURVEY==1 {
 	* Create RI12 Individual Number
 	*gen RI12=string(${RI_LINE}) + "_"  + string(${TT_LINE})
 	*label variable RI12  "Unique number for child using the Respondent's line number and child line number"
-	gen RI12 = ${HM_LINE}
+	gen RI12 = HM22 //${HM_LINE}
 	label variable RI12 "Respondent line number from HM dataset"
 	* Create RI26 Vaccination Card ever received?
 		gen RI26=.
@@ -605,14 +622,8 @@ if $RI_SURVEY==1 {
 		}
 	}
 
-	* If no card dob data provided, replace with history dob information 
-	foreach d in m d y {
-		replace dob_date_card_`d'=dob_date_history_`d' if missing(dob_date_card_`d') & !missing(dob_date_history_`d')
-		
-	}
-
 	* Create all card and register variables
-	local s card register
+	local s card //register
 
 	foreach v in `s' {
 		if "`v'"=="card" {
@@ -645,7 +656,7 @@ if $RI_SURVEY==1 {
 			replace `d'_tick_`v'=1 if inlist(`d'_date_`v'_m,44,4444,97,9997) | inlist(`d'_date_`v'_d,44,4444,97,9997) | inlist(`d'_date_`v'_y,44,4444,97,9997)
 			
 			*also replace tick to be 1 if $`v' is set to 3- Vacc marked on card
-			replace `d'_tick_`v'=1 if ${`=upper("`d'")'_`b'}==3
+			replace `d'_tick_`v'=1 if $`=upper("`d'")'==3
 			
 			* If card says vaccinated but no date is present set tick
 			replace `d'_tick_`v' = 1 if ${`=upper("`d'")'}==1 & mdy(`d'_date_`v'_m,`d'_date_`v'_d,`d'_date_`v'_y)==.
@@ -659,7 +670,7 @@ if $RI_SURVEY==1 {
 
 
 	* Create variable for dose history
-	local s card register
+	local s card //register
 	foreach d in `=upper("${RI_LIST}")' {
 		gen `=lower("`d'")'_history=.
 		label variable `=lower("`d'")'_history "`d' - history"
@@ -675,9 +686,9 @@ if $RI_SURVEY==1 {
 
 			
 			* replace to a "no" or "do not know" value if history is set to that
-			replace `=lower("`d'")'_history=1 if ${`d'_`b'}==2
-			replace `=lower("`d'")'_history=99 if ${`d'_`b'}==8
-			replace `=lower("`d'")'_history=2 if ${`d'_`b'}==0
+			replace `=lower("`d'")'_history=1 if ${`d'}==2
+			replace `=lower("`d'")'_history=99 if ${`d'}==8
+			replace `=lower("`d'")'_history=2 if ${`d'}==0
 			replace `=lower("`d'")'_history=. if !inlist(`=lower("`d'")'_history,1,2,99)
 		}
 		
@@ -698,10 +709,9 @@ if $RI_SURVEY==1 {
 	}
 
 	* Replace dates with missing values if set to 0 |44 |4444 |97| 9997 | 9999 | 99 |98 |9998
-	local s card register
+	local s card //register
 
 	foreach g in `s' {
-		di "`s'"
 		foreach v in `=lower("${RI_LIST}")' {
 			foreach m in m d y {
 				replace `v'_date_`s'_`m'=. if inlist(`v'_date_`s'_`m',0,44,4444,97,9997,99,9999,98,9998)
